@@ -7,10 +7,11 @@ import { GlobeControls } from '@/components/Globe/GlobeControls';
 import { LocationInfo } from '@/components/Globe/LocationInfo';
 import { Selection } from '@/lib/geo-data';
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { Globe2, Grid3X3, Compass } from 'lucide-react';
+import { Globe2, Grid3X3, Compass, Satellite as SatIcon, MapPin, Zap } from 'lucide-react';
 
 export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState<Selection | null>(null);
+  const [hoveredSat, setHoveredSat] = useState<{ data: any, pos: { x: number, y: number } } | null>(null);
   
   const globeControlsRef = useRef<{
     zoomIn: () => void;
@@ -25,6 +26,10 @@ export default function Home() {
 
   const handleClosePanel = () => {
     setSelectedLocation(null);
+  };
+
+  const handleHover = (data: any | null, pos: { x: number, y: number } | null) => {
+    setHoveredSat(data ? { data, pos: pos! } : null);
   };
 
   return (
@@ -70,7 +75,7 @@ export default function Home() {
         </div>
 
         {/* 3D Globe Component */}
-        <Globe onSelect={handleSelection} controlsRef={globeControlsRef} />
+        <Globe onSelect={handleSelection} onHover={handleHover} controlsRef={globeControlsRef} />
 
         {/* Controls Overlay */}
         <GlobeControls 
@@ -82,6 +87,57 @@ export default function Home() {
 
         {/* Sidebar Info Panel */}
         <LocationInfo selection={selectedLocation} onClose={handleClosePanel} />
+
+        {/* Hover Tooltip Window */}
+        {hoveredSat && (
+          <div 
+            className="fixed pointer-events-none z-50 glass-panel p-4 rounded-xl border-primary/40 shadow-2xl animate-in fade-in zoom-in duration-200 w-64 space-y-3"
+            style={{ 
+              left: hoveredSat.pos.x + 20, 
+              top: hoveredSat.pos.y - 120,
+              transform: 'translateY(-50%)' 
+            }}
+          >
+            <div className="flex items-center gap-2 border-b border-white/10 pb-2">
+              <SatIcon className="w-4 h-4 text-primary" />
+              <span className="text-sm font-headline font-bold text-white uppercase tracking-tight">
+                {hoveredSat.data.name}
+              </span>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold">Uplink Node</span>
+                <div className="flex items-center gap-1 text-[10px] text-accent font-bold">
+                  <MapPin className="w-3 h-3" />
+                  {hoveredSat.data.connectedPop?.name || 'Searching...'}
+                </div>
+              </div>
+
+              <div className="h-px bg-white/5" />
+              
+              <div className="space-y-1">
+                <span className="text-[10px] text-muted-foreground uppercase font-bold flex items-center gap-1">
+                  <Zap className="w-3 h-3 text-red-500" /> Mesh Neighbors (Red)
+                </span>
+                <div className="grid grid-cols-2 gap-1 mt-1">
+                  {hoveredSat.data.neighbors?.map((n: any, i: number) => (
+                      <div key={i} className="bg-white/5 p-1.5 rounded flex flex-col">
+                        <span className="text-[8px] text-muted-foreground font-mono uppercase">
+                          {n.direction}
+                        </span>
+                        <span className="text-[9px] font-bold text-white truncate">{n.name}</span>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="text-[8px] text-center text-primary animate-pulse font-mono font-bold tracking-widest mt-2">
+              ACTIVE INTER-SATELLITE LINKS
+            </div>
+          </div>
+        )}
 
         {/* Background Visual Elements */}
         <div className="absolute inset-0 pointer-events-none z-0">

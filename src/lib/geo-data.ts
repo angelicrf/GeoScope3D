@@ -239,23 +239,19 @@ export const GATEWAY_CONNECTIONS = network.connections;
 
 const generateSatellites = (): Satellite[] => {
   const satellites: Satellite[] = [];
-  const orbits = 11; 
-  const satsPerOrbit = 11; 
+  const activePlanes = 6; 
+  const satsPerPlane = 28; // Reduced to 1/3 of previous (84 / 3 = 28)
   let satCounter = 1;
 
-  for (let i = 0; i < orbits; i++) {
-    const lat = -75 + (i * 15);
-    for (let j = 0; j < satsPerOrbit; j++) {
-      if (satCounter > 120) break;
-      
-      const lng = (j / satsPerOrbit) * 360 - 180;
+  for (let i = 0; i < activePlanes; i++) {
+    for (let j = 0; j < satsPerPlane; j++) {
       satellites.push({
         type: 'satellite',
         name: `sat-${satCounter++}`,
-        lat,
-        lng,
-        altitude: 100 + (Math.random() * 20),
-        orbitalVelocity: (7.5 + Math.random()).toFixed(2) + ' km/s',
+        lat: 0, // Computed dynamically by Globe.tsx
+        lng: 0, // Computed dynamically by Globe.tsx
+        altitude: 550.0, // Standardized altitude for the shell
+        orbitalVelocity: '7.58 km/s',
         status: Math.random() > 0.1 ? 'active' : (Math.random() > 0.5 ? 'maintenance' : 'low-power')
       });
     }

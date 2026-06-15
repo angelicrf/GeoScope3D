@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { X, Sparkles, Globe2, Info, Loader2, Grid3X3, Layers, MapPin, Cable, Satellite as SatelliteIcon, Signal } from 'lucide-react';
+import { X, Sparkles, Globe2, Info, Loader2, Grid3X3, Layers, MapPin, Cable, Satellite as SatelliteIcon, Signal, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -139,6 +139,33 @@ export function LocationInfo({ selection, onClose }: LocationInfoProps) {
               )}
             </div>
           </section>
+
+          {isSat && data.neighbors && (
+            <section className="space-y-3">
+              <div className="flex items-center gap-2 text-red-400">
+                <Zap className="w-4 h-4" />
+                <h3 className="text-sm font-headline font-bold uppercase tracking-wider">Mesh Neighbors</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                {data.neighbors.map((neighbor: any, idx: number) => (
+                  <div 
+                    key={idx} 
+                    className="p-3 rounded-xl bg-white/5 border border-white/10 flex flex-col gap-1 shadow-sm"
+                  >
+                    <span className="text-[9px] font-mono text-red-500 font-bold tracking-tighter uppercase">
+                      {neighbor.direction}
+                    </span>
+                    <span className="text-xs font-bold text-white truncate">
+                      {neighbor.name}
+                    </span>
+                    <span className="text-[10px] text-muted-foreground italic">
+                      {neighbor.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
 
           <section className="space-y-3">
             <div className="flex items-center gap-2 text-muted-foreground">

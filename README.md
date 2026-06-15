@@ -27,6 +27,11 @@ The UI is optimized for fluid interaction and includes a modern dark-themed pres
 - **Location Detail Panel**: A right-side details panel shows selected location metadata, status, and descriptive information.
 - **Responsive Controls**: Custom globe controls make it easy to zoom, reset view, and explore the map.
 - **Static App Behavior**: The current version does not depend on external cloud-hosting tooling and runs with local data sources.
+- **High-Fidelity LEO Mesh**: A Starlink-style "Main Shell" visualization using a procedural 53-degree inclined orbital mesh with optimized node density. For visualization purposes, the system maintains a high-density constellation where a select group of satellites are active interactive assets, while the remainder serve as inactive mesh nodes to illustrate network topology.
+- **Collision-Free Orbital Physics**: Implementation of Walker Delta phasing to ensure realistic, non-intersecting satellite trajectories across all orbital planes.
+- **Dynamic Inter-Satellite Links (ISL)**: Real-time visualization of network topology with active red connection lines between grid neighbors (Top/Bottom/Left/Right).
+- **Network Intelligence Overlays**: Interactive hover tooltips and selection windows displaying satellite telemetry, orbital velocity, and automatic ground-node (PoP) identification.
+- **Physically Accurate Simulation**: Precision simulation of a 90-minute LEO orbital cycle with smooth, performance-tuned 3D movement.
 
 ## Application Structure
 
